@@ -1,18 +1,23 @@
-		Physijs.scripts.worker = 'lib/physijs_worker.js';
-		Physijs.scripts.ammo = 'ammo.js';		
+		Physijs.scripts.worker = './js/physijs_worker.js';
+		Physijs.scripts.ammo = '../ammo.js';
 
 		var width = window.innerWidth;
 		var height = window.innerHeight;
 
-	    var scene = new Physijs.Scene;
-
-	    var cubeGeometry = new THREE.CubeGeometry(100, 100, 100);
-		var cubeMaterial = new THREE.MeshLambertMaterial({ color: 0x1ec876 });
-		var cube = new Physijs.Mesh(cubeGeometry, cubeMaterial);
-		 
-		cube.rotation.y = Math.PI * 45 / 180;
-		 
-		scene.add(cube);
+		var scene = new Physijs.Scene;
+		
+		scene.addEventListener( 'update', function() {
+			//your code. physics calculations have done updating
+		});
+		
+	    var ground_material = Physijs.createMaterial(
+			new THREE.MeshStandardMaterial( { color: 0x00ff00 } ),0, .9 // low restitution
+		);
+		// Ground
+		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(750, 1, 750),ground_material,0 // mass
+		);
+		ground.receiveShadow = true;
+		scene.add( ground );
 
 	    var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 
@@ -27,24 +32,27 @@
 
 		var clock = new THREE.Clock;
 
+		// Orbit controls
+		var controls = new THREE.OrbitControls(camera);
+		controls.enablePan = false;
+		controls.enableZoom = true;
 
 		function render() {
-    		renderer.render(scene, camera);
-     		cube.rotation.y -= clock.getDelta();
+			controls.update();
+			renderer.render(scene, camera);
     		requestAnimationFrame(render);
 		}
  
 		render();
 
-		camera.lookAt(cube.position);
-
-		var skyboxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
-		var skyboxMaterial = new THREE.MeshBasicMaterial({ color: 0x000000, side: THREE.BackSide });
-		var skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
-		 
-		scene.add(skybox);
+		camera.lookAt(ground.position);
 
 		var pointLight = new THREE.PointLight(0xffffff);
 		pointLight.position.set(0, 300, 200);
 		 
 		scene.add(pointLight);
+
+
+		// Lets add some shapes!
+		var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35));
+		scene.add(domino);
