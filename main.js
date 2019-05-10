@@ -17,7 +17,19 @@
 		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(750, 1, 750),ground_material,0 // mass
 		);
 		ground.receiveShadow = true;
-		scene.add( ground );
+		ground.position.x -=450;
+		scene.add(ground);
+
+
+		// Ground 2
+		var ground_material2 = Physijs.createMaterial(
+			new THREE.MeshStandardMaterial( { color: 0x008080 } ),0, .9 // low restitution
+		);
+		var ground2 = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
+		);
+		ground2.receiveShadow = true;
+		ground2.position.x +=250;
+		scene.add(ground2);
 
 	    var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 
@@ -47,12 +59,58 @@
 
 		camera.lookAt(ground.position);
 
-		var pointLight = new THREE.PointLight(0xffffff);
-		pointLight.position.set(0, 300, 200);
+		var pointLight = new THREE.PointLight(0xffffff, 30);
+		pointLight.position.set(0, 500, 200);
 		 
 		scene.add(pointLight);
 
 
 		// Lets add some shapes!
-		var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35));
-		scene.add(domino);
+		var objects = [];
+
+
+		//DOMINO FIRST thank you
+		for(var i = 0; i < 100; i++) {
+			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35));
+			domino.position.y += 70;
+			domino.position.x += 150;
+			domino.position.z -= 200;
+			domino.castShadow = true;
+			domino.receiveShadow = true;
+			scene.add(domino);
+			objects.push(domino);
+		}
+
+		
+
+		//ball next thank you
+		for(var i = 0; i < 100; i++) {
+			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ));
+			ball.position.y += 30;
+			ball.position.x += 150;
+			ball.castShadow = true;
+			ball.receiveShadow = true;
+			scene.add(ball);
+			objects.push(ball);
+		}
+
+		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
+		
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
