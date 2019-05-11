@@ -11,10 +11,10 @@
 		});
 		
 	    var ground_material = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ),0, .9 // low restitution
+			new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true } ),0, .9 // low restitution
 		);
 		// Playground
-		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(750, 1, 750),ground_material,0 // mass
+		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(2000, 1, 2000),ground_material,0 // mass
 		);
 		ground.receiveShadow = true;
 		ground.position.x -=450;
@@ -28,6 +28,7 @@
 		var machineSpace = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
 		);
 		machineSpace.receiveShadow = true;
+		machineSpace.position.y += 10;
 		machineSpace.position.x +=250;
 		scene.add(machineSpace);
 
@@ -60,7 +61,7 @@
 		render();
 
 		camera.lookAt(ground.position);
-		
+
 		var light = new THREE.DirectionalLight( 0xffffff );
 		light.position.set( 1, 1, 1 );
 		scene.add( light );
@@ -79,7 +80,7 @@
 		for(var i = 0; i < 100; i++) {
 			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), material);
-			domino.position.y += 70;
+			domino.position.y += 80;
 			domino.position.x += 150;
 			domino.position.z -= 200;
 			domino.castShadow = true;
@@ -94,13 +95,71 @@
 		for(var i = 0; i < 100; i++) {
 			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), material);
-			ball.position.y += 30;
+			ball.position.y += 40;
 			ball.position.x += 150;
 			ball.castShadow = true;
 			ball.receiveShadow = true;
 			scene.add(ball);
 			objects.push(ball);
 		}
+
+		// Large Cube
+		for(var i = 0; i < 100; i++) {
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), material, 0);
+			cube.position.z -= 200;
+			cube.position.y += 70;
+			cube.position.x += 300;
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+			scene.add(cube);
+			objects.push(cube);
+		}
+
+		// Medium Cube
+		for(var i = 0; i < 100; i++) {
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), material, 0);
+			cube.position.y += 40;
+			cube.position.x += 300;
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+			scene.add(cube);
+			objects.push(cube);
+		}
+
+		// Small Cube
+		for(var i = 0; i < 100; i++) {
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), material, 0);
+			cube.position.z += 100;
+			cube.position.y += 25;
+			cube.position.x += 300;
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+			scene.add(cube);
+			objects.push(cube);
+		}
+
+		// SeeSaw
+		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), material);
+		fulcrum.position.x += 150;
+		fulcrum.position.y += 25;
+		fulcrum.position.z += 200;
+		fulcrum.castShadow = true;
+		fulcrum.receiveShadow = true;
+		scene.add(fulcrum);
+		objects.push(fulcrum);
+
+		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), material);
+		seesaw.position.y += 45;
+		seesaw.position.x += 145;
+		seesaw.position.z += 200;
+		seesaw.castShadow = true;
+		seesaw.receiveShadow = true;
+		scene.add(seesaw);
+		objects.push(seesaw);
 
 		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
 
