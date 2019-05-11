@@ -11,7 +11,7 @@
 		});
 		
 	    var ground_material = Physijs.createMaterial(
-			new THREE.MeshStandardMaterial( { color: 0x00ff00 } ),0, .9 // low restitution
+			new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ),0, .9 // low restitution
 		);
 		// Playground
 		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(750, 1, 750),ground_material,0 // mass
@@ -23,7 +23,7 @@
 
 		// Machine Space
 		var ground_material2 = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { color: 0xffffff, flatshading: true } ),0, .9 // low restitution
+			new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true } ),0, .9 // low restitution
 		);
 		var machineSpace = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
 		);
@@ -60,14 +60,15 @@
 		render();
 
 		camera.lookAt(ground.position);
-
-		var pointLight = new THREE.PointLight(0xffffff, 30);
-		pointLight.position.set(0, 500, 200);
 		
-		var light = new THREE.AmbientLight( 0x222222 );
-		
+		var light = new THREE.DirectionalLight( 0xffffff );
+		light.position.set( 1, 1, 1 );
 		scene.add( light );
-		scene.add(pointLight);
+		var light = new THREE.DirectionalLight( 0x002288 );
+		light.position.set( - 1, - 1, - 1 );
+		scene.add( light );
+		var light = new THREE.AmbientLight( 0x222222 );
+		scene.add( light );
 
 
 		// Lets add some shapes!
@@ -76,7 +77,7 @@
 
 		//DOMINO FIRST thank you
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatshading: true });
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), material);
 			domino.position.y += 70;
 			domino.position.x += 150;
@@ -91,7 +92,7 @@
 
 		//ball next thank you
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatshading: true });
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), material);
 			ball.position.y += 30;
 			ball.position.x += 150;
@@ -102,6 +103,8 @@
 		}
 
 		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
+
+		// scene.simulate();
 		
 
 		
