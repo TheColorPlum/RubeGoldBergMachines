@@ -104,7 +104,40 @@
 		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
 		
 
-		
+		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30));
+		fulcrum.position.x += 150;
+		fulcrum.position.y += 15;
+		fulcrum.position.z += 200;
+		fulcrum.castShadow = true;
+		fulcrum.receiveShadow = true;
+		scene.add(fulcrum);
+		objects.push(fulcrum);
+
+		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(250, 10, 70));
+		seesaw.position.y += 35;
+		seesaw.position.x += 145;
+		seesaw.position.z += 200;
+		seesaw.castShadow = true;
+		seesaw.receiveShadow = true;
+		scene.add(seesaw);
+		objects.push(seesaw);
+
+
+		// var constraint = new Physijs.HingeConstraint(
+  //   		fulcrum, // First object to be constrained
+  //   		seesaw, // OPTIONAL second object - if omitted then physijs_mesh_1 will be constrained to the scene
+  //   		new THREE.Vector3( 0, 10, 0 ), // point in the scene to apply the constraint
+  //   		new THREE.Vector3( 1, 0, 0 ) // Axis along which the hinge lies - in this case it is the X axis
+		// );
+		// scene.addConstraint( constraint );
+		// constraint.setLimits(
+		//     low, // minimum angle of motion, in radians
+		//     high, // maximum angle of motion, in radians
+		//     bias_factor, // applied as a factor to constraint error
+		//     relaxation_factor, // controls bounce at limit (0.0 == no bounce)
+		// );
+		// constraint.enableAngularMotor( target_velocity, acceration_force );
+		// constraint.disableMotor();
 
 
 
