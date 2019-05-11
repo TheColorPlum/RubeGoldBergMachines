@@ -165,6 +165,7 @@
 
 		// scene.simulate();
 		
+		// Seesaw
 		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), material);
 		fulcrum.position.x += 150;
@@ -201,7 +202,15 @@
 		// constraint.enableAngularMotor( target_velocity, acceration_force );
 		// constraint.disableMotor();
 
-
+		// Pendulum
+		collisionConfiguration = new Ammo.btSoftBodyRigidBodyCollisionConfiguration();
+		dispatcher = new Ammo.btCollisionDispatcher( collisionConfiguration );
+		broadphase = new Ammo.btDbvtBroadphase();
+		solver = new Ammo.btSequentialImpulseConstraintSolver();
+		softBodySolver = new Ammo.btDefaultSoftBodySolver();
+		physicsWorld = new Ammo.btSoftRigidDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration, softBodySolver);
+		physicsWorld.setGravity( new Ammo.btVector3( 0, gravityConstant, 0 ) );
+		physicsWorld.getWorldInfo().set_m_gravity( new Ammo.btVector3( 0, gravityConstant, 0 ) );
 
 
 
