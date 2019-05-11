@@ -106,8 +106,8 @@
 
 		// scene.simulate();
 		
-
-		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30));
+		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), material);
 		fulcrum.position.x += 150;
 		fulcrum.position.y += 15;
 		fulcrum.position.z += 200;
@@ -116,7 +116,7 @@
 		scene.add(fulcrum);
 		objects.push(fulcrum);
 
-		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(250, 10, 70));
+		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), material);
 		seesaw.position.y += 35;
 		seesaw.position.x += 145;
 		seesaw.position.z += 200;
@@ -125,7 +125,7 @@
 		scene.add(seesaw);
 		objects.push(seesaw);
 
-
+		// SeeSaw Constraint
 		// var constraint = new Physijs.HingeConstraint(
   //   		fulcrum, // First object to be constrained
   //   		seesaw, // OPTIONAL second object - if omitted then physijs_mesh_1 will be constrained to the scene
