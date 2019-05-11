@@ -13,7 +13,7 @@
 	    var ground_material = Physijs.createMaterial(
 			new THREE.MeshStandardMaterial( { color: 0x00ff00 } ),0, .9 // low restitution
 		);
-		// Ground
+		// Playground
 		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(750, 1, 750),ground_material,0 // mass
 		);
 		ground.receiveShadow = true;
@@ -21,15 +21,15 @@
 		scene.add(ground);
 
 
-		// Ground 2
+		// Machine Space
 		var ground_material2 = Physijs.createMaterial(
-			new THREE.MeshStandardMaterial( { color: 0x008080 } ),0, .9 // low restitution
+			new THREE.MeshPhongMaterial( { color: 0xffffff, flatshading: true } ),0, .9 // low restitution
 		);
-		var ground2 = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
+		var machineSpace = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
 		);
-		ground2.receiveShadow = true;
-		ground2.position.x +=250;
-		scene.add(ground2);
+		machineSpace.receiveShadow = true;
+		machineSpace.position.x +=250;
+		scene.add(machineSpace);
 
 	    var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 
@@ -46,8 +46,10 @@
 
 		// Orbit controls
 		var controls = new THREE.OrbitControls(camera);
-		controls.enablePan = false;
+		controls.enabled = true;
+		controls.enablePan = true;
 		controls.enableZoom = true;
+		controls.enableKeys = true;
 
 		function render() {
 			controls.update();
@@ -61,7 +63,10 @@
 
 		var pointLight = new THREE.PointLight(0xffffff, 30);
 		pointLight.position.set(0, 500, 200);
-		 
+		
+		var light = new THREE.AmbientLight( 0x222222 );
+		
+		scene.add( light );
 		scene.add(pointLight);
 
 
@@ -71,7 +76,8 @@
 
 		//DOMINO FIRST thank you
 		for(var i = 0; i < 100; i++) {
-			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35));
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatshading: true });
+			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), material);
 			domino.position.y += 70;
 			domino.position.x += 150;
 			domino.position.z -= 200;
@@ -85,7 +91,8 @@
 
 		//ball next thank you
 		for(var i = 0; i < 100; i++) {
-			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ));
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatshading: true });
+			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), material);
 			ball.position.y += 30;
 			ball.position.x += 150;
 			ball.castShadow = true;
