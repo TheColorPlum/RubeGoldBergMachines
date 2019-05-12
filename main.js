@@ -161,6 +161,40 @@
 		scene.add(seesaw);
 		objects.push(seesaw);
 
+		// Inclined Plane
+		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+		var geometry = new THREE.Geometry();
+		geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+		geometry.vertices.push(new THREE.Vector3(-50, 0, 0));
+		geometry.vertices.push(new THREE.Vector3(-50, 0, -50));
+		geometry.vertices.push(new THREE.Vector3(-50, 50, -50));
+		geometry.vertices.push(new THREE.Vector3(0, 50, -50));
+		geometry.vertices.push(new THREE.Vector3(0, 0, -50));
+
+		var face0 = new THREE.Face3(4, 1, 0);
+		var face0r = new THREE.Face3(4, 3, 1);
+
+		var face1 = new THREE.Face3(3, 2, 1);
+
+		var face2 = new THREE.Face3(2, 3, 4);
+		var face2r = new THREE.Face3(2, 4, 5);
+
+		var face3 = new THREE.Face3(0, 1, 5);
+		var face3r = new THREE.Face3(5, 2, 1);
+
+		var face4 = new THREE.Face3(0, 5, 4);
+
+		geometry.faces.push(face0, face1, face2, face3, face4, face0r, face2r, face3r);
+		geometry.computeFaceNormals();
+		geometry.computeVertexNormals();
+
+		var inclinedPlane = new Physijs.ConcaveMesh(geometry, material);
+		inclinedPlane.position.x += 325;
+		inclinedPlane.position.y += 10;
+		inclinedPlane.position.z += 200;
+		scene.add(inclinedPlane);
+		objects.push(inclinedPlane);
+
 		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
 
 		// scene.simulate();
