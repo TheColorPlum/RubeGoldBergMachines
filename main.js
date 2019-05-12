@@ -198,6 +198,52 @@
 		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
 
 		// scene.simulate();
+
+
+
+		// Pendulum Functions
+		// var rigidBodies = [];
+		// var margin = 0.05;
+
+		// function createRigidBody( threeObject, physicsShape, mass, pos, quat ) {
+  //       	threeObject.position.copy( pos );
+  //       	threeObject.quaternion.copy( quat );
+		// 	var transform = new Ammo.btTransform();
+		// 	transform.setIdentity();
+		// 	transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
+		// 	transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
+		// 	var motionState = new Ammo.btDefaultMotionState( transform );
+		// 	var localInertia = new Ammo.btVector3( 0, 0, 0 );
+	 //    	physicsShape.calculateLocalInertia( mass, localInertia );
+	 //    	var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, physicsShape, localInertia );
+	 //    	var body = new Ammo.btRigidBody( rbInfo );
+		// 	threeObject.userData.physicsBody = body;
+		// 	scene.add( threeObject );
+		// 	if ( mass > 0 ) {
+		// 		rigidBodies.push( threeObject );
+		// 		// Disable deactivation
+		// 		body.setActivationState( 4 );
+		// 	}
+		// 	physicsWorld.addRigidBody( body );
+  //       }
+
+		// Swing
+		var swingMass = 1.2;
+		var swingRadius = 50;
+		var swing = new Physijs.SphereMesh( new THREE.SphereGeometry( swingRadius, 20, 20 ), new THREE.MeshPhongMaterial( { color: 0x202020, flatShading: true } ) );
+		swing.castShadow = true;
+		swing.receiveShadow = true;
+		// var ballShape = new Ammo.btSphereShape( ballRadius );
+		// ballShape.setMargin(0.05);
+		// var pos = new THREE.Vector3( -3, 2, 0 );
+		// var quat = new THREE.Quaternion( 0, 0, 0, 1 );
+		// createRigidBody( ball, ballShape, ballMass, pos, quat );
+		// ball.userData.physicsBody.setFriction( margin );
+		swing.position.set(150, 70, -200);
+		swing.castShadow = true;
+		swing.receiveShadow = true;
+		scene.add(swing);
+		objects.push(swing);
 		
 
 		
