@@ -5,7 +5,7 @@
 		var height = window.innerHeight;
 
 		var scene = new Physijs.Scene;
-		//scene.setGravity(new THREE.Vector3( 0, -10, 0));
+		scene.setGravity(new THREE.Vector3( 0, -100, 0));
 		
 		scene.addEventListener( 'update', function() {
 			//your code. physics calculations have done updating
@@ -70,13 +70,9 @@
 
 	    var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
 
-<<<<<<< HEAD
-	    camera.position.y = 160; 
-		camera.position.z = 400; 
-=======
 	    camera.position.y = 500;
 		camera.position.z = 1000;
->>>>>>> 21fa3e354a70f271c4370f11a17ef8134f408a8e
+
 
 		scene.add(camera);
 
@@ -94,6 +90,8 @@
 
 		function render() {
 			orbitControls.update();
+			renderer.clear();
+			scene.simulate();
 			renderer.render(scene, camera);
     		requestAnimationFrame(render);
 		}
@@ -116,7 +114,6 @@
 		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 
 		//DOMINO FIRST thank you
-<<<<<<< HEAD
 		var domino_texture = new THREE.TextureLoader().load('../textures/domino.png');
 		domino_texture.mapping = THREE.EquirectangularReflectionMapping;
 	    var domino_material = Physijs.createMaterial(
@@ -132,23 +129,9 @@
 			domino.receiveShadow = true;
 			scene.add(domino);
 			objects.push(domino);
-		}
-=======
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), material);
-		domino.position.y += 80;
-		domino.position.x += 150;
-		domino.position.z -= 200;
-		domino.castShadow = true;
-		domino.receiveShadow = true;
-		scene.add(domino);
-		objects.push(domino);
->>>>>>> 21fa3e354a70f271c4370f11a17ef8134f408a8e
-
-		
+		}	
 
 		//ball next thank you
-<<<<<<< HEAD
 		var ball_texture = new THREE.TextureLoader().load('../textures/ball.png');
 		ball_texture.mapping = THREE.SphericalReflectionMapping;
 		var ball_material = Physijs.createMaterial(
@@ -181,69 +164,27 @@
 		// Medium Cube
 		for(var i = 0; i < 100; i++) {
 			var medium = new THREE.MeshPhongMaterial({ color: 0xf9e368, flatShading: true });
-			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
-			cube.position.y += 40;
-			cube.position.x += 850;
-			cube.castShadow = true;
-			cube.receiveShadow = true;
-			scene.add(cube);
-			objects.push(cube);
+			var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
+			cubeM.position.y += 40;
+			cubeM.position.x += 850;
+			cubeM.castShadow = true;
+			cubeM.receiveShadow = true;
+			scene.add(cubeM);
+			objects.push(cubeM);
 		}
 
 		// Small Cube
 		for(var i = 0; i < 100; i++) {
 			var small = new THREE.MeshPhongMaterial({ color: 0x3676f7, flatShading: true });
-			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
-			cube.position.z += 100;
-			cube.position.y += 25;
-			cube.position.x += 850;
-			cube.castShadow = true;
-			cube.receiveShadow = true;
-			scene.add(cube);
-			objects.push(cube);
+			var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
+			cubeS.position.z += 100;
+			cubeS.position.y += 25;
+			cubeS.position.x += 850;
+			cubeS.castShadow = true;
+			cubeS.receiveShadow = true;
+			scene.add(cubeS);
+			objects.push(cubeS);
 		}
-=======
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), material);
-		ball.position.y += 40;
-		ball.position.x += 150;
-		ball.castShadow = true;
-		ball.receiveShadow = true;
-		scene.add(ball);
-		objects.push(ball);
-
-		// Large Cube
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), material, 0);
-		cube.position.z -= 200;
-		cube.position.y += 70;
-		cube.position.x += 300;
-		cube.castShadow = true;
-		cube.receiveShadow = true;
-		scene.add(cube);
-		objects.push(cube);
-
-		// Medium Cube
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), material, 0);
-		cubeM.position.y += 40;
-		cubeM.position.x += 300;
-		cubeM.castShadow = true;
-		cubeM.receiveShadow = true;
-		scene.add(cubeM);
-		objects.push(cubeM);
-
-		// Small Cube
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), material, 0);
-		cubeS.position.z += 100;
-		cubeS.position.y += 25;
-		cubeS.position.x += 300;
-		cubeS.castShadow = true;
-		cubeS.receiveShadow = true;
-		scene.add(cubeS);
-		objects.push(cubeS);
->>>>>>> 21fa3e354a70f271c4370f11a17ef8134f408a8e
 
 		// SeeSaw
 		var wood_texture = new THREE.TextureLoader().load('../textures/wood.png');
@@ -342,7 +283,6 @@
 
   		// Pendulum
 		// Swing
-<<<<<<< HEAD
 		// var swingMass = 1.2;
 		// var swingRadius = 50;
 		// var swing = new Physijs.SphereMesh( new THREE.SphereGeometry( swingRadius, 20, 20 ), new THREE.MeshPhongMaterial( { color: 0x202020, flatShading: true } ) );
@@ -354,24 +294,6 @@
 
 		// Stand
 		//var base = new Physijs.BoxMesh(new THREE.BoxGeometry(10, 10, 70), material);
-=======
-		var swingMass = 1.2;
-		var swingRadius = 50;
-		var swing = new Physijs.SphereMesh( new THREE.SphereGeometry( swingRadius, 20, 20 ), new THREE.MeshPhongMaterial( { color: 0x202020, flatShading: true } ) );
-		swing.castShadow = true;
-		swing.receiveShadow = true;
-		// var ballShape = new Ammo.btSphereShape( ballRadius );
-		// ballShape.setMargin(0.05);
-		// var pos = new THREE.Vector3( -3, 2, 0 );
-		// var quat = new THREE.Quaternion( 0, 0, 0, 1 );
-		// createRigidBody( ball, ballShape, ballMass, pos, quat );
-		// ball.userData.physicsBody.setFriction( margin );
-		swing.position.set(150, 70, -200);
-		swing.castShadow = true;
-		swing.receiveShadow = true;
-		scene.add(swing);
-		
->>>>>>> 21fa3e354a70f271c4370f11a17ef8134f408a8e
 
 		/* When the user clicks on the button, 
 		toggle between hiding and showing the dropdown content */
@@ -379,22 +301,6 @@
 			document.getElementById("myDropdown").classList.toggle("show");
 		}
 		
-<<<<<<< HEAD
-		// Seesaw
-		// var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), material);
-		// fulcrum.position.set(150, 15, 200);
-		// fulcrum.castShadow = true;
-		// fulcrum.receiveShadow = true;
-		// scene.add(fulcrum);
-		// objects.push(fulcrum);
-
-		// var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), material);
-		// seesaw.position.set(145, 35, 200);
-		// seesaw.castShadow = true;
-		// seesaw.receiveShadow = true;
-		// scene.add(seesaw);
-		// objects.push(seesaw);
-=======
 		// Close the dropdown menu if the user clicks outside of it
 		window.onclick = function(event) {
 			if (!event.target.matches('.dropbtn')) {
@@ -408,8 +314,6 @@
 			}
 			}
 		}
-
->>>>>>> 21fa3e354a70f271c4370f11a17ef8134f408a8e
 
 
 
