@@ -74,11 +74,11 @@
 
 		// Lets add some shapes!
 		var objects = [];
+		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 
 
 		//DOMINO FIRST thank you
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), material);
 			domino.position.y += 80;
 			domino.position.x += 150;
@@ -93,7 +93,6 @@
 
 		//ball next thank you
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), material);
 			ball.position.y += 40;
 			ball.position.x += 150;
@@ -105,7 +104,6 @@
 
 		// Large Cube
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), material, 0);
 			cube.position.z -= 200;
 			cube.position.y += 70;
@@ -118,7 +116,6 @@
 
 		// Medium Cube
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), material, 0);
 			cube.position.y += 40;
 			cube.position.x += 300;
@@ -130,7 +127,6 @@
 
 		// Small Cube
 		for(var i = 0; i < 100; i++) {
-			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), material, 0);
 			cube.position.z += 100;
 			cube.position.y += 25;
@@ -141,91 +137,36 @@
 			objects.push(cube);
 		}
 
-		// SeeSaw
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), material);
-		fulcrum.position.x += 150;
-		fulcrum.position.y += 25;
-		fulcrum.position.z += 200;
-		fulcrum.castShadow = true;
-		fulcrum.receiveShadow = true;
-		scene.add(fulcrum);
-		objects.push(fulcrum);
-
-		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), material);
-		seesaw.position.y += 45;
-		seesaw.position.x += 145;
-		seesaw.position.z += 200;
-		seesaw.castShadow = true;
-		seesaw.receiveShadow = true;
-		scene.add(seesaw);
-		objects.push(seesaw);
-
 		var dragcontrols = new THREE.DragControls(objects, camera, renderer.domElement);
 
 		// scene.simulate();
 
 
-
-		// Pendulum Functions
-		// var rigidBodies = [];
-		// var margin = 0.05;
-
-		// function createRigidBody( threeObject, physicsShape, mass, pos, quat ) {
-  //       	threeObject.position.copy( pos );
-  //       	threeObject.quaternion.copy( quat );
-		// 	var transform = new Ammo.btTransform();
-		// 	transform.setIdentity();
-		// 	transform.setOrigin( new Ammo.btVector3( pos.x, pos.y, pos.z ) );
-		// 	transform.setRotation( new Ammo.btQuaternion( quat.x, quat.y, quat.z, quat.w ) );
-		// 	var motionState = new Ammo.btDefaultMotionState( transform );
-		// 	var localInertia = new Ammo.btVector3( 0, 0, 0 );
-	 //    	physicsShape.calculateLocalInertia( mass, localInertia );
-	 //    	var rbInfo = new Ammo.btRigidBodyConstructionInfo( mass, motionState, physicsShape, localInertia );
-	 //    	var body = new Ammo.btRigidBody( rbInfo );
-		// 	threeObject.userData.physicsBody = body;
-		// 	scene.add( threeObject );
-		// 	if ( mass > 0 ) {
-		// 		rigidBodies.push( threeObject );
-		// 		// Disable deactivation
-		// 		body.setActivationState( 4 );
-		// 	}
-		// 	physicsWorld.addRigidBody( body );
-  //       }
-
+  		// Pendulum
 		// Swing
 		var swingMass = 1.2;
 		var swingRadius = 50;
 		var swing = new Physijs.SphereMesh( new THREE.SphereGeometry( swingRadius, 20, 20 ), new THREE.MeshPhongMaterial( { color: 0x202020, flatShading: true } ) );
 		swing.castShadow = true;
 		swing.receiveShadow = true;
-		// var ballShape = new Ammo.btSphereShape( ballRadius );
-		// ballShape.setMargin(0.05);
-		// var pos = new THREE.Vector3( -3, 2, 0 );
-		// var quat = new THREE.Quaternion( 0, 0, 0, 1 );
-		// createRigidBody( ball, ballShape, ballMass, pos, quat );
-		// ball.userData.physicsBody.setFriction( margin );
 		swing.position.set(150, 70, -200);
-		swing.castShadow = true;
-		swing.receiveShadow = true;
 		scene.add(swing);
 		objects.push(swing);
+
+		// Stand
+		var base = new Physijs.BoxMesh(new THREE.BoxGeometry(10, 10, 70), material);
+
 		
 		// Seesaw
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), material);
-		fulcrum.position.x += 150;
-		fulcrum.position.y += 15;
-		fulcrum.position.z += 200;
+		fulcrum.position.set(150, 15, 200);
 		fulcrum.castShadow = true;
 		fulcrum.receiveShadow = true;
 		scene.add(fulcrum);
 		objects.push(fulcrum);
 
 		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), material);
-		seesaw.position.y += 35;
-		seesaw.position.x += 145;
-		seesaw.position.z += 200;
+		seesaw.position.(145, 35, 200);
 		seesaw.castShadow = true;
 		seesaw.receiveShadow = true;
 		scene.add(seesaw);
@@ -247,16 +188,6 @@
 		// );
 		// constraint.enableAngularMotor( target_velocity, acceration_force );
 		// constraint.disableMotor();
-
-		// Pendulum
-		collisionConfiguration = new Ammo.btSoftBodyRigidBodyCollisionConfiguration();
-		dispatcher = new Ammo.btCollisionDispatcher( collisionConfiguration );
-		broadphase = new Ammo.btDbvtBroadphase();
-		solver = new Ammo.btSequentialImpulseConstraintSolver();
-		softBodySolver = new Ammo.btDefaultSoftBodySolver();
-		physicsWorld = new Ammo.btSoftRigidDynamicsWorld( dispatcher, broadphase, solver, collisionConfiguration, softBodySolver);
-		physicsWorld.setGravity( new Ammo.btVector3( 0, gravityConstant, 0 ) );
-		physicsWorld.getWorldInfo().set_m_gravity( new Ammo.btVector3( 0, gravityConstant, 0 ) );
 
 
 
