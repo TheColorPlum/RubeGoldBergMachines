@@ -10,18 +10,15 @@ var mouse = new THREE.Vector2(), INTERSECTED;
 var radius = 100, theta = 0;
 var objects = [];
 var once = false;
+var simulate = false;
 init();
 animate();
 
 function init() {
-	if (once === true) {
-		return;
-	}
-
 	width = window.innerWidth;
 	height = window.innerHeight;
 
-	scene = new Physijs.Scene;
+	scene = new Physijs.Scene({ reportsize: 50, fixedTimeStep: 1 / 60 });
 	scene.setGravity(new THREE.Vector3( 0, -100, 0));
 	scene.addEventListener( 'update', function() {
 		//your code. physics calculations have done updating
@@ -135,14 +132,6 @@ function init() {
 	// Selecting objects on mouse click
 	raycaster = new THREE.Raycaster();
 	mouse = new THREE.Vector2();
-
-	/* raycaster = new THREE.Raycaster();
-	renderer = new THREE.WebGLRenderer();
-	renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
-	document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-	window.addEventListener( 'resize', onWindowResize, false ); */
-	once = true;
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -201,7 +190,9 @@ function render() {
 
 	orbitControls.update();
 	renderer.clear();
-	scene.simulate();
+	if (simulate) {
+		scene.simulate();
+	}
 	renderer.render( scene, camera );
 }
 
@@ -361,6 +352,13 @@ function generateInclinedPlane() {
 	inclinedPlane.position.z += 200;
 	scene.add(inclinedPlane);
 	objects.push(inclinedPlane);
+}
+
+//////////////////////////////////////////////////////////////////////////////////
+/*	*	*	*	*	*	*	*	*	 SIMULATE 	*	*	*	*	*	*	*	*	*/
+//////////////////////////////////////////////////////////////////////////////////
+function Simulation() {
+	simulate = !(simulate);
 }
 	// Pendulum
 // Swing
