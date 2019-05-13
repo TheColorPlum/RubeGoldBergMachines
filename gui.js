@@ -22,6 +22,16 @@ var Simulate = function() {
 	this.simulate = function() { Simulation() };
 }
 
+var Restart = function() {
+	this.restart = function() {
+		for (let i = 0; i < objects.length; i++){
+			objects[i].material.dispose();
+			objects[i].geometry.dispose();
+			scene.remove(objects[i]);
+		}
+	}
+}
+
 function dropdown() {
 	var gui = new dat.GUI();
 	var domino = new Domino();
@@ -30,12 +40,14 @@ function dropdown() {
 	var seesaw = new SeeSaw();
 	var i_p = new InclinedPlane();
 	var simulate = new Simulate();
+	var restart = new Restart();
 	gui.add(domino, 'domino');
 	gui.add(ball, 'ball');
 	gui.add(cube, 'cube');
-	gui.add(seesaw, 'seesaw');
+	//gui.add(seesaw, 'seesaw');
 	gui.add(i_p, 'inclined_plane');
 	gui.add(simulate, 'simulate');
+	gui.add(restart, 'restart')
 }
 
 window.onload = function() {
