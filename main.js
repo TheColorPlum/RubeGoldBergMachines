@@ -120,16 +120,14 @@
 			new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } ),0, .9 // low restitution
 		);
 
-		for(var i = 0; i < 100; i++) {
-			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
-			domino.position.y += 80;
-			domino.position.x += 700;
-			domino.position.z -= 200;
-			domino.castShadow = true;
-			domino.receiveShadow = true;
-			scene.add(domino);
-			objects.push(domino);
-		}	
+		var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
+		domino.position.y += 80;
+		domino.position.x += 700;
+		domino.position.z -= 200;
+		domino.castShadow = true;
+		domino.receiveShadow = true;
+		scene.add(domino);
+		objects.push(domino);
 
 		//ball next thank you
 		var ball_texture = new THREE.TextureLoader().load('../textures/ball.png');
@@ -138,53 +136,47 @@
 			new THREE.MeshPhongMaterial( { flatShading: true, map: ball_texture } ),0, .9 // low restitution
 		);
 
-		for(var i = 0; i < 100; i++) {
-			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), ball_material);
-			ball.position.y += 40;
-			ball.position.x += 700;
-			ball.castShadow = true;
-			ball.receiveShadow = true;
-			scene.add(ball);
-			objects.push(ball);
-		}
+		
+		var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), ball_material);
+		ball.position.y += 40;
+		ball.position.x += 700;
+		ball.castShadow = true;
+		ball.receiveShadow = true;
+		scene.add(ball);
+		objects.push(ball);
+		
 
 		// Large Cube
-		for(var i = 0; i < 100; i++) {
-			var large = new THREE.MeshPhongMaterial({ color: 0xd368f9, flatShading: true });
-			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), large, 0);
-			cube.position.z -= 200;
-			cube.position.y += 70;
-			cube.position.x += 850;
-			cube.castShadow = true;
-			cube.receiveShadow = true;
-			scene.add(cube);
-			objects.push(cube);
-		}
+		var large = new THREE.MeshPhongMaterial({ color: 0xd368f9, flatShading: true });
+		var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), large, 0);
+		cube.position.z -= 200;
+		cube.position.y += 70;
+		cube.position.x += 850;
+		cube.castShadow = true;
+		cube.receiveShadow = true;
+		scene.add(cube);
+		objects.push(cube);
 
 		// Medium Cube
-		for(var i = 0; i < 100; i++) {
-			var medium = new THREE.MeshPhongMaterial({ color: 0xf9e368, flatShading: true });
-			var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
-			cubeM.position.y += 40;
-			cubeM.position.x += 850;
-			cubeM.castShadow = true;
-			cubeM.receiveShadow = true;
-			scene.add(cubeM);
-			objects.push(cubeM);
-		}
+		var medium = new THREE.MeshPhongMaterial({ color: 0xf9e368, flatShading: true });
+		var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
+		cubeM.position.y += 40;
+		cubeM.position.x += 850;
+		cubeM.castShadow = true;
+		cubeM.receiveShadow = true;
+		scene.add(cubeM);
+		objects.push(cubeM);
 
 		// Small Cube
-		for(var i = 0; i < 100; i++) {
-			var small = new THREE.MeshPhongMaterial({ color: 0x3676f7, flatShading: true });
-			var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
-			cubeS.position.z += 100;
-			cubeS.position.y += 25;
-			cubeS.position.x += 850;
-			cubeS.castShadow = true;
-			cubeS.receiveShadow = true;
-			scene.add(cubeS);
-			objects.push(cubeS);
-		}
+		var small = new THREE.MeshPhongMaterial({ color: 0x3676f7, flatShading: true });
+		var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
+		cubeS.position.z += 100;
+		cubeS.position.y += 25;
+		cubeS.position.x += 850;
+		cubeS.castShadow = true;
+		cubeS.receiveShadow = true;
+		scene.add(cubeS);
+		objects.push(cubeS);
 
 		// SeeSaw
 		var wood_texture = new THREE.TextureLoader().load('../textures/wood.png');
@@ -263,21 +255,35 @@
 		scene.add(inclinedPlane);
 		objects.push(inclinedPlane);
 
-		for (var i = 0; i < objects.length; i++) {
-			if (i != 3) {
-				continue;
-			}
-			var transformControls = new THREE.TransformControls(camera, renderer.domElement);    
-			transformControls.addEventListener('change', render);
-			transformControls.attach(objects[i]);
-			transformControls.addEventListener('mouseDown', function () {
-				orbitControls.enabled = false;
-			});
-			transformControls.addEventListener('mouseUp', function () {
-				orbitControls.enabled = true;
-			});
-			scene.add(transformControls);
-		}
+		var transformControls = new THREE.TransformControls(camera, renderer.domElement);    
+		transformControls.addEventListener('change', render);
+		transformControls.attach(objects[3]);
+		transformControls.addEventListener('mouseDown', function () {
+			orbitControls.enabled = false;
+		});
+		transformControls.addEventListener('mouseUp', function () {
+			orbitControls.enabled = true;
+		});
+		window.addEventListener('keydown', function(event) {
+			if(event.code == 'KeyR') {
+				transformControls.setMode("rotate");
+			} else if (event.code == 'KeyT') {
+				transformControls.setMode("translate");
+			} else if (event.code == 'KeyS') {
+				transformControls.setMode("scale");
+			} else if (event.code == 'Space') {
+				!(transformControls.enabled);
+			} else return;
+		});
+		scene.add(transformControls);
+
+		// Compute Intersections
+		var raycaster = new THREE.Raycaster();
+
+
+
+
+
 		// scene.simulate();
 
 
