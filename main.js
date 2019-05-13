@@ -162,12 +162,12 @@ function render() {
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children );
 
-	if(intersects.length > 0) {
+	/* if(intersects.length > 0) {
 	//	transformControls.detach();
 		if(objects.includes(intersects[0].object)) {
 			transformControls.attach(intersects[0].object);
 		}
-	}
+	} */
 
 	orbitControls.update();
 	renderer.clear();
@@ -356,7 +356,6 @@ function Simulation() {
 		obj.material.dispose();
 		obj.geometry.dispose();
 
-		d
 		scene.remove(obj);
 
 		// Add the mesh to the scene
