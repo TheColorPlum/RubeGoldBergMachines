@@ -6,6 +6,7 @@
 		var radius = 100, theta = 0;
 		var objects = [];
 		var once = false;
+
 		init();
 		animate();
 
@@ -131,29 +132,10 @@
 			// Selecting objects on mouse click
 			raycaster = new THREE.Raycaster();
 			mouse = new THREE.Vector2();
-
-			//DOMINO FIRST thank you
-			var domino_texture = new THREE.TextureLoader().load('../textures/domino.png');
-			domino_texture.mapping = THREE.EquirectangularReflectionMapping;
-			var domino_material = Physijs.createMaterial(
-				new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } ),0, .9 // low restitution
-			);
-
-			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
-			domino.position.y += 80;
-			domino.position.x += 700;
-			domino.position.z -= 200;
-			domino.castShadow = true;
-			domino.receiveShadow = true;
-			scene.add(domino);
-			objects.push(domino);
-			/* raycaster = new THREE.Raycaster();
-			renderer = new THREE.WebGLRenderer();
-			renderer.setPixelRatio( window.devicePixelRatio );
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
-			window.addEventListener( 'resize', onWindowResize, false ); */
 			once = true;
+
+			generateBall();
+			generateDomino();
 		}
 
 		function onWindowResize() {
@@ -175,24 +157,6 @@
 		}
 
 		function render() {
-			
-			/* camera.updateMatrixWorld();
-			// find intersections
-			raycaster.setFromCamera( mouse, camera );
-			var intersects = raycaster.intersectObjects( scene.children );
-			if ( intersects.length > 0 ) {
-				if ( INTERSECTED != intersects[ 0 ].object ) {
-					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-					INTERSECTED = intersects[ 0 ].object;
-					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-					INTERSECTED.material.emissive.setHex( 0xff0000 );
-				}
-			} else {
-				if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-				INTERSECTED = null;
-			}
-			
- */
 
 			// update the picking ray with the camera and mouse position
 			raycaster.setFromCamera( mouse, camera );
@@ -201,7 +165,7 @@
 			var intersects = raycaster.intersectObjects( scene.children );
 
 			if(intersects.length > 0) {
-			//	transformControls.detach();
+				//	transformControls.detach();
 				if(objects.includes(intersects[0].object)) {
 					transformControls.attach(intersects[0].object);
 				}
@@ -217,6 +181,24 @@
 
 		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 
+		function generateDomino() {
+			//DOMINO FIRST thank you
+			var domino_texture = new THREE.TextureLoader().load('../textures/domino.png');
+			domino_texture.mapping = THREE.EquirectangularReflectionMapping;
+			var domino_material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } ),0, .9 // low restitution
+			);
+
+			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
+			domino.position.y += 80;
+			domino.position.x += 700;
+			domino.position.z -= 200;
+			domino.castShadow = true;
+			domino.receiveShadow = true;
+			scene.add(domino);
+			objects.push(domino);
+		}
+
 		function generateBall() {
 			//ball next thank you
 			var ball_texture = new THREE.TextureLoader().load('../textures/ball.png');
@@ -226,7 +208,7 @@
 			);
 
 			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), ball_material);
-			ball.position.y += 40;
+			ball.position.y += 70;
 			ball.position.x += 700;
 			ball.castShadow = true;
 			ball.receiveShadow = true;
