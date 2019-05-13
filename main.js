@@ -174,6 +174,12 @@ function render() {
 	if (simulate) {
 		scene.simulate();
 	}
+	for(var i = 0; i < objects.length; i++){
+		var bbox = new THREE.Box3().setFromObject(objects[i]);
+		if (bbox.min.y < 0) {
+			objects[i].position.y = objects[i].position.y + (0-bbox.min.y);
+		}
+	}
 	renderer.render( scene, camera );
 }
 
