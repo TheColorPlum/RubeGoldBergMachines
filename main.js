@@ -202,7 +202,9 @@
 
 			if(intersects.length > 0) {
 			//	transformControls.detach();
-				transformControls.attach(intersects[0].object);
+				if(objects.includes(intersects[0].object)) {
+					transformControls.attach(intersects[0].object);
+				}
 			}
 
 			orbitControls.update();
@@ -215,81 +217,89 @@
 
 		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 
-		//ball next thank you
-		var ball_texture = new THREE.TextureLoader().load('../textures/ball.png');
-		ball_texture.mapping = THREE.SphericalReflectionMapping;
-		var ball_material = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { flatShading: true, map: ball_texture } ),0, .9 // low restitution
-		);
+		function generateBall() {
+			//ball next thank you
+			var ball_texture = new THREE.TextureLoader().load('../textures/ball.png');
+			ball_texture.mapping = THREE.SphericalReflectionMapping;
+			var ball_material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { flatShading: true, map: ball_texture } ),0, .9 // low restitution
+			);
 
-		
-		var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), ball_material);
-		ball.position.y += 40;
-		ball.position.x += 700;
-		ball.castShadow = true;
-		ball.receiveShadow = true;
-		scene.add(ball);
-		objects.push(ball);
-		
+			var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), ball_material);
+			ball.position.y += 40;
+			ball.position.x += 700;
+			ball.castShadow = true;
+			ball.receiveShadow = true;
+			scene.add(ball);
+			objects.push(ball);
+		}
 
-		// Large Cube
-		var large = new THREE.MeshPhongMaterial({ color: 0xd368f9, flatShading: true });
-		var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), large, 0);
-		cube.position.z -= 200;
-		cube.position.y += 70;
-		cube.position.x += 850;
-		cube.castShadow = true;
-		cube.receiveShadow = true;
-		scene.add(cube);
-		objects.push(cube);
+		function generateLargeCube() {
+			// Large Cube
+			var large = new THREE.MeshPhongMaterial({ color: 0xd368f9, flatShading: true });
+			var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), large, 0);
+			cube.position.z -= 200;
+			cube.position.y += 70;
+			cube.position.x += 850;
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+			scene.add(cube);
+			objects.push(cube);
+		}
 
-		// Medium Cube
-		var medium = new THREE.MeshPhongMaterial({ color: 0xf9e368, flatShading: true });
-		var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
-		cubeM.position.y += 40;
-		cubeM.position.x += 850;
-		cubeM.castShadow = true;
-		cubeM.receiveShadow = true;
-		scene.add(cubeM);
-		objects.push(cubeM);
+		function generateMediumCube() {
+			// Medium Cube
+			var medium = new THREE.MeshPhongMaterial({ color: 0xf9e368, flatShading: true });
+			var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
+			cubeM.position.y += 40;
+			cubeM.position.x += 850;
+			cubeM.castShadow = true;
+			cubeM.receiveShadow = true;
+			scene.add(cubeM);
+			objects.push(cubeM);
+		}
 
-		// Small Cube
-		var small = new THREE.MeshPhongMaterial({ color: 0x3676f7, flatShading: true });
-		var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
-		cubeS.position.z += 100;
-		cubeS.position.y += 25;
-		cubeS.position.x += 850;
-		cubeS.castShadow = true;
-		cubeS.receiveShadow = true;
-		scene.add(cubeS);
-		objects.push(cubeS);
+		function generateSmallCube() {
+			// Small Cube
+			var small = new THREE.MeshPhongMaterial({ color: 0x3676f7, flatShading: true });
+			var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
+			cubeS.position.z += 100;
+			cubeS.position.y += 25;
+			cubeS.position.x += 850;
+			cubeS.castShadow = true;
+			cubeS.receiveShadow = true;
+			scene.add(cubeS);
+			objects.push(cubeS);
+		}
 
-		// SeeSaw
-		var wood_texture = new THREE.TextureLoader().load('../textures/wood.png');
-		wood_texture.mapping = THREE.SphericalReflectionMapping;
-		var wood_material = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { flatShading: true, map: wood_texture } ),0, .9 // low restitution
-		);
+		function generateSeeSaw() {
+			// SeeSaw
+			var wood_texture = new THREE.TextureLoader().load('../textures/wood.png');
+			wood_texture.mapping = THREE.SphericalReflectionMapping;
+			var wood_material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { flatShading: true, map: wood_texture } ),0, .9 // low restitution
+			);
 
-		var stand_color = new THREE.MeshPhongMaterial({ color: 0xef2354, flatShading: true });
-		var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), stand_color);
-		fulcrum.position.x += 700;
-		fulcrum.position.y += 25;
-		fulcrum.position.z += 200;
-		fulcrum.castShadow = true;
-		fulcrum.receiveShadow = true;
-		scene.add(fulcrum);
-		objects.push(fulcrum);
+			var stand_color = new THREE.MeshPhongMaterial({ color: 0xef2354, flatShading: true });
+			var fulcrum = new Physijs.ConeMesh(new THREE.CylinderGeometry(10, 30, 30), stand_color);
+			fulcrum.position.x += 700;
+			fulcrum.position.y += 25;
+			fulcrum.position.z += 200;
+			fulcrum.castShadow = true;
+			fulcrum.receiveShadow = true;
+			scene.add(fulcrum);
+			objects.push(fulcrum);
 
-		var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), wood_material);
-		seesaw.position.y += 45;
-		seesaw.position.x += 695;
-		seesaw.position.z += 200;
-		seesaw.castShadow = true;
-		seesaw.receiveShadow = true;
-		scene.add(seesaw);
-		objects.push(seesaw);
+			var seesaw = new Physijs.BoxMesh(new THREE.BoxGeometry(200, 10, 70), wood_material);
+			seesaw.position.y += 45;
+			seesaw.position.x += 695;
+			seesaw.position.z += 200;
+			seesaw.castShadow = true;
+			seesaw.receiveShadow = true;
+			scene.add(seesaw);
+			objects.push(seesaw);
 
+		}
 		// SeeSaw Constraint
 		// var constraint = new Physijs.HingeConstraint(
   //   		fulcrum, // First object to be constrained
@@ -307,40 +317,38 @@
 		// constraint.enableAngularMotor( target_velocity, acceration_force );
 		// constraint.disableMotor();
 
-		// Inclined Plane
-		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-		var geometry = new THREE.Geometry();
-		geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-		geometry.vertices.push(new THREE.Vector3(-50, 0, 0));
-		geometry.vertices.push(new THREE.Vector3(-50, 0, -50));
-		geometry.vertices.push(new THREE.Vector3(-50, 50, -50));
-		geometry.vertices.push(new THREE.Vector3(0, 50, -50));
-		geometry.vertices.push(new THREE.Vector3(0, 0, -50));
+		function generateInclinedPlane() {
+			// Inclined Plane
+			var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
+			var geometry = new THREE.Geometry();
+			geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+			geometry.vertices.push(new THREE.Vector3(-50, 0, 0));
+			geometry.vertices.push(new THREE.Vector3(-50, 0, -50));
+			geometry.vertices.push(new THREE.Vector3(-50, 50, -50));
+			geometry.vertices.push(new THREE.Vector3(0, 50, -50));
+			geometry.vertices.push(new THREE.Vector3(0, 0, -50));
 
-		var face0 = new THREE.Face3(4, 1, 0);
-		var face0r = new THREE.Face3(4, 3, 1);
+			var face0 = new THREE.Face3(4, 1, 0);
+			var face0r = new THREE.Face3(4, 3, 1);
+			var face1 = new THREE.Face3(3, 2, 1);
+			var face2 = new THREE.Face3(2, 3, 4);
+			var face2r = new THREE.Face3(2, 4, 5);
+			var face3 = new THREE.Face3(0, 1, 5);
+			var face3r = new THREE.Face3(5, 2, 1);
+			var face4 = new THREE.Face3(0, 5, 4);
 
-		var face1 = new THREE.Face3(3, 2, 1);
+			geometry.faces.push(face0, face1, face2, face3, face4, face0r, face2r, face3r);
+			geometry.computeFaceNormals();
+			geometry.computeVertexNormals();
 
-		var face2 = new THREE.Face3(2, 3, 4);
-		var face2r = new THREE.Face3(2, 4, 5);
-
-		var face3 = new THREE.Face3(0, 1, 5);
-		var face3r = new THREE.Face3(5, 2, 1);
-
-		var face4 = new THREE.Face3(0, 5, 4);
-
-		geometry.faces.push(face0, face1, face2, face3, face4, face0r, face2r, face3r);
-		geometry.computeFaceNormals();
-		geometry.computeVertexNormals();
-
-		var inclinedPlane = new Physijs.ConcaveMesh(geometry, material);
-		inclinedPlane.position.x += 875;
-		inclinedPlane.position.y += 10;
-		inclinedPlane.position.z += 200;
-		scene.add(inclinedPlane);
-		objects.push(inclinedPlane);
-		// scene.simulate();
+			var inclinedPlane = new Physijs.ConcaveMesh(geometry, material);
+			inclinedPlane.position.x += 875;
+			inclinedPlane.position.y += 10;
+			inclinedPlane.position.z += 200;
+			scene.add(inclinedPlane);
+			objects.push(inclinedPlane);
+		}
+		
 
 
   		// Pendulum
