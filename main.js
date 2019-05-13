@@ -1,116 +1,156 @@
-		Physijs.scripts.worker = './js/physijs_worker.js';
+        Physijs.scripts.worker = './js/physijs_worker.js';
 		Physijs.scripts.ammo = '../ammo.js';
 
-		var width = window.innerWidth;
-		var height = window.innerHeight;
+		var camera, scene, raycaster, renderer, width, height, orbitControls;
+		var mouse = new THREE.Vector2(), INTERSECTED;
+		var radius = 100, theta = 0;
+		var objects = [];
 
-		var scene = new Physijs.Scene;
-		scene.setGravity(new THREE.Vector3( 0, -100, 0));
-		
-		scene.addEventListener( 'update', function() {
-			//your code. physics calculations have done updating
-		});
-		
-		// Playground
-		var grass = new THREE.TextureLoader().load('../textures/grass.png');
-		grass.mapping = THREE.EquirectangularReflectionMapping;
-	    var ground_material = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ),0, .9 // low restitution
-		);
+		init();
+		animate();
 
-		var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 1, 4000), ground_material, 0 // mass
-		);
-		ground.receiveShadow = true;
-		ground.position.x -= 500;
-		scene.add(ground);
+		function init() {
+			width = window.innerWidth;
+			height = window.innerHeight;
 
-		// Walls
-		var sky = new THREE.TextureLoader().load('../textures/sky.png');
-		sky.mapping = THREE.EquirectangularReflectionMapping;
-	    var wall_material = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { flatShading: true, map: sky } ),0, .9 // low restitution
-		);
+			scene = new Physijs.Scene;
+			scene.setGravity(new THREE.Vector3( 0, -100, 0));
+			scene.addEventListener( 'update', function() {
+				//your code. physics calculations have done updating
+			});
+			
+			// Playground
+			var grass = new THREE.TextureLoader().load('../textures/grass.png');
+			grass.mapping = THREE.EquirectangularReflectionMapping;
+			var ground_material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ),0, .9 // low restitution
+			);
+			var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 1, 4000), ground_material, 0 // mass
+			);
+			ground.receiveShadow = true;
+			ground.position.x -= 500;
+			scene.add(ground);
 
-	    // Back Wall
-		var back = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 3000, 1), wall_material, 0);
-		back.receiveShadow = true;
-		back.position.x -= 500;
-		back.position.y += 1500;
-		back.position.z -= 2000;
-		scene.add(back);
+			// Walls
+			var sky = new THREE.TextureLoader().load('../textures/sky.png');
+			sky.mapping = THREE.EquirectangularReflectionMapping;
+			var wall_material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { flatShading: true, map: sky } ),0, .9 // low restitution
+			);
 
-		// Left Wall
-		var left = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 3000, 4000), wall_material, 0);
-		left.receiveShadow = true;
-		left.position.y += 1500;
-		left.position.x += 1500;
-		scene.add(left);
+			// Back Wall
+			var back = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 3000, 1), wall_material, 0);
+			back.receiveShadow = true;
+			back.position.x -= 500;
+			back.position.y += 1500;
+			back.position.z -= 2000;
+			scene.add(back);
 
-		// Right Wall
-		// Backwards :/
-		var right = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 3000, 4000), wall_material, 0);
-		right.receiveShadow = true;
-		right.position.y += 1500;
-		right.position.x -= 2500;
-		scene.add(right);
+			// Left Wall
+			var left = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 3000, 4000), wall_material, 0);
+			left.receiveShadow = true;
+			left.position.y += 1500;
+			left.position.x += 1500;
+			scene.add(left);
 
-		// Machine Space
-		var sand = new THREE.TextureLoader().load('../textures/sand.png');
-		sand.mapping = THREE.EquirectangularReflectionMapping;
+			// Right Wall
+			// Backwards :/
+			var right = new Physijs.BoxMesh(new THREE.BoxGeometry(1, 3000, 4000), wall_material, 0);
+			right.receiveShadow = true;
+			right.position.y += 1500;
+			right.position.x -= 2500;
+			scene.add(right);
 
-		var ground_material2 = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true, map: sand } ),0, .9 // low restitution
-		);
-		var machineSpace = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
-		);
-		machineSpace.receiveShadow = true;
-		machineSpace.position.y += 10;
-		machineSpace.position.x += 850;
-		scene.add(machineSpace);
+			// Machine Space
+			var sand = new THREE.TextureLoader().load('../textures/sand.png');
+			sand.mapping = THREE.EquirectangularReflectionMapping;
+			var ground_material2 = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { color: 0xffffff, flatShading: true, map: sand } ),0, .9 // low restitution
+			);
+			var machineSpace = new Physijs.BoxMesh(new THREE.BoxGeometry(400, 1, 750),ground_material2,0 // mass
+			);
+			machineSpace.receiveShadow = true;
+			machineSpace.position.y += 10;
+			machineSpace.position.x += 850;
+			scene.add(machineSpace);
 
-	    var camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
+			camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
+			camera.position.y = 500;
+			camera.position.z = 1000;
+			scene.add(camera);
 
-	    camera.position.y = 500;
-		camera.position.z = 1000;
+			camera.lookAt(ground.position);
 
+			var light = new THREE.DirectionalLight( 0xffffff );
+			light.position.set( 1, 1, 1 );
+			scene.add( light );
+			var light = new THREE.DirectionalLight( 0x002288 );
+			light.position.set( - 1, - 1, - 1 );
+			scene.add( light );
+			var light = new THREE.AmbientLight( 0x222222 );
+			scene.add( light );
 
-		scene.add(camera);
+			renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setSize(width, height);
+			renderer.gammaInput = true;
+			renderer.gammaOutput = true;
+			document.body.appendChild(renderer.domElement);
 
-	    var renderer = new THREE.WebGLRenderer({ antialias: true });
-		renderer.setSize(width, height);
-		renderer.gammaInput = true;
-		renderer.gammaOutput = true;
-		document.body.appendChild(renderer.domElement);
+			var clock = new THREE.Clock;
 
-		var clock = new THREE.Clock;
+			// Orbit controls
+			orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+			orbitControls.enableKeys = false;
+			/* raycaster = new THREE.Raycaster();
+			renderer = new THREE.WebGLRenderer();
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+			window.addEventListener( 'resize', onWindowResize, false ); */
+		}
 
-		// Orbit controls
-		var orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
-		orbitControls.enableKeys = false;
+		function onWindowResize() {
+			camera.aspect = window.innerWidth / window.innerHeight;
+			camera.updateProjectionMatrix();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+		}
+
+		function onDocumentMouseMove( event ) {
+			event.preventDefault();
+			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+		}
+
+		function animate() {
+			requestAnimationFrame( animate );
+
+			render();
+		}
 
 		function render() {
+			
+			/* camera.updateMatrixWorld();
+			// find intersections
+			raycaster.setFromCamera( mouse, camera );
+			var intersects = raycaster.intersectObjects( scene.children );
+			if ( intersects.length > 0 ) {
+				if ( INTERSECTED != intersects[ 0 ].object ) {
+					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+					INTERSECTED = intersects[ 0 ].object;
+					INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+					INTERSECTED.material.emissive.setHex( 0xff0000 );
+				}
+			} else {
+				if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+				INTERSECTED = null;
+			}
+ */
 			orbitControls.update();
 			renderer.clear();
 			scene.simulate();
-			renderer.render(scene, camera);
-    		requestAnimationFrame(render);
+			renderer.render( scene, camera );
 		}
- 
-		render();
-
-		camera.lookAt(ground.position);
-
-		var light = new THREE.DirectionalLight( 0xffffff );
-		light.position.set( 1, 1, 1 );
-		scene.add( light );
-		var light = new THREE.DirectionalLight( 0x002288 );
-		light.position.set( - 1, - 1, - 1 );
-		scene.add( light );
-		var light = new THREE.AmbientLight( 0x222222 );
-		scene.add( light );
-
-		// All object
-		var objects = [];
+		
 		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 
 		//DOMINO FIRST thank you
@@ -277,10 +317,6 @@
 		});
 		scene.add(transformControls);
 
-		// Compute Intersections
-		var raycaster = new THREE.Raycaster();
-
-
 
 
 
@@ -300,38 +336,3 @@
 
 		// Stand
 		//var base = new Physijs.BoxMesh(new THREE.BoxGeometry(10, 10, 70), material);
-
-		/* When the user clicks on the button, 
-		toggle between hiding and showing the dropdown content */
-		function myFunction() {
-			document.getElementById("myDropdown").classList.toggle("show");
-		}
-		
-		// Close the dropdown menu if the user clicks outside of it
-		window.onclick = function(event) {
-			if (!event.target.matches('.dropbtn')) {
-			var dropdowns = document.getElementsByClassName("dropdown-content");
-			var i;
-			for (i = 0; i < dropdowns.length; i++) {
-				var openDropdown = dropdowns[i];
-				if (openDropdown.classList.contains('show')) {
-				openDropdown.classList.remove('show');
-				}
-			}
-			}
-		}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
