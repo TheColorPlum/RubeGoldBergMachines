@@ -156,25 +156,6 @@ function animate() {
 }
 
 function render() {
-	
-	/* camera.updateMatrixWorld();
-	// find intersections
-	raycaster.setFromCamera( mouse, camera );
-	var intersects = raycaster.intersectObjects( scene.children );
-	if ( intersects.length > 0 ) {
-		if ( INTERSECTED != intersects[ 0 ].object ) {
-			if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-			INTERSECTED = intersects[ 0 ].object;
-			INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-			INTERSECTED.material.emissive.setHex( 0xff0000 );
-		}
-	} else {
-		if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-		INTERSECTED = null;
-	}
-	
-*/
-
 	// update the picking ray with the camera and mouse position
 	raycaster.setFromCamera( mouse, camera );
 
@@ -208,16 +189,15 @@ var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true 
 function generateDomino() {
 	var domino_texture = new THREE.TextureLoader().load('../textures/domino.png');
 	domino_texture.mapping = THREE.EquirectangularReflectionMapping;
-	var domino_material = Physijs.createMaterial(
-		new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } ),0, .9 // low restitution
-	);
+	var domino_material = new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } );
 
-	var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
+	var domino = new THREE.Mesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
 	domino.position.y += 80;
 	domino.position.x += 700;
 	domino.position.z -= 200;
 	domino.castShadow = true;
 	domino.receiveShadow = true;
+	domino.id = 0;
 	scene.add(domino);
 	objects.push(domino);
 }
@@ -358,6 +338,34 @@ function generateInclinedPlane() {
 /*	*	*	*	*	*	*	*	*	 SIMULATE 	*	*	*	*	*	*	*	*	*/
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
+	// Convert every object in the scene into a physijs mesh
+	const current = objects.length;
+	for (var i = 0; i < current; i++) {
+		var obj = objects[i];
+
+		// Clone the necessary aspects of the mesh
+		var mat = obj.material.clone();
+		var position = obj.position.clone();
+		var geometry = obj.geometry.clone();
+
+		// Create the new Physijs mesh
+		var physObj = new Physijs.ConcaveMesh(geometry, mat);
+		physObj.position.copy(position);
+
+		// Remove the old mesh from the scene
+		obj.material.dispose();
+		obj.geometry.dispose();
+
+		d
+		scene.remove(obj);
+
+		// Add the mesh to the scene
+		objects.push(physObj);
+		scene.add(physObj);
+
+		// reset transform controls
+		transformControls.detach();
+	}
 	simulate = !(simulate);
 }
 	// Pendulum
