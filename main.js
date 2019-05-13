@@ -1,15 +1,19 @@
         Physijs.scripts.worker = './js/physijs_worker.js';
 		Physijs.scripts.ammo = '../ammo.js';
 
-		var camera, scene, raycaster, renderer, width, height, orbitControls;
+		var camera, scene, raycaster, renderer, width, height, orbitControls, transformControls;
 		var mouse = new THREE.Vector2(), INTERSECTED;
 		var radius = 100, theta = 0;
 		var objects = [];
-
+		var once = false;
 		init();
 		animate();
 
 		function init() {
+			if (once === true) {
+				return;
+			}
+
 			width = window.innerWidth;
 			height = window.innerHeight;
 
@@ -101,12 +105,55 @@
 			// Orbit controls
 			orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
 			orbitControls.enableKeys = false;
+
+			// Transform controls
+			transformControls = new THREE.TransformControls(camera, renderer.domElement);    
+			transformControls.addEventListener('change', render);
+			transformControls.addEventListener('mouseDown', function () {
+				orbitControls.enabled = false;
+			});
+			transformControls.addEventListener('mouseUp', function () {
+				orbitControls.enabled = true;
+			});
+			window.addEventListener('keydown', function(event) {
+				if(event.code == 'KeyR') {
+					transformControls.setMode("rotate");
+				} else if (event.code == 'KeyT') {
+					transformControls.setMode("translate");
+				} else if (event.code == 'KeyS') {
+					transformControls.setMode("scale");
+				} else if (event.code == 'Space') {
+					!(transformControls.enabled);
+				} else return;
+			});
+			scene.add(transformControls);
+
+			// Selecting objects on mouse click
+			raycaster = new THREE.Raycaster();
+			mouse = new THREE.Vector2();
+
+			//DOMINO FIRST thank you
+			var domino_texture = new THREE.TextureLoader().load('../textures/domino.png');
+			domino_texture.mapping = THREE.EquirectangularReflectionMapping;
+			var domino_material = Physijs.createMaterial(
+				new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } ),0, .9 // low restitution
+			);
+
+			var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
+			domino.position.y += 80;
+			domino.position.x += 700;
+			domino.position.z -= 200;
+			domino.castShadow = true;
+			domino.receiveShadow = true;
+			scene.add(domino);
+			objects.push(domino);
 			/* raycaster = new THREE.Raycaster();
 			renderer = new THREE.WebGLRenderer();
 			renderer.setPixelRatio( window.devicePixelRatio );
 			renderer.setSize( window.innerWidth, window.innerHeight );
 			document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 			window.addEventListener( 'resize', onWindowResize, false ); */
+			once = true;
 		}
 
 		function onWindowResize() {
@@ -115,7 +162,7 @@
 			renderer.setSize( window.innerWidth, window.innerHeight );
 		}
 
-		function onDocumentMouseMove( event ) {
+		function onMouseMove( event ) {
 			event.preventDefault();
 			mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 			mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
@@ -144,30 +191,29 @@
 				if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
 				INTERSECTED = null;
 			}
+			
  */
+
+			// update the picking ray with the camera and mouse position
+			raycaster.setFromCamera( mouse, camera );
+
+			// calculate objects intersecting the picking ray
+			var intersects = raycaster.intersectObjects( scene.children );
+
+			if(intersects.length > 0) {
+			//	transformControls.detach();
+				transformControls.attach(intersects[0].object);
+			}
+
 			orbitControls.update();
 			renderer.clear();
 			scene.simulate();
 			renderer.render( scene, camera );
 		}
 		
+		window.addEventListener( 'mousemove', onMouseMove, false );
+
 		var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
-
-		//DOMINO FIRST thank you
-		var domino_texture = new THREE.TextureLoader().load('../textures/domino.png');
-		domino_texture.mapping = THREE.EquirectangularReflectionMapping;
-	    var domino_material = Physijs.createMaterial(
-			new THREE.MeshPhongMaterial( { flatShading: true, map: domino_texture } ),0, .9 // low restitution
-		);
-
-		var domino = new Physijs.BoxMesh(new THREE.BoxGeometry(70, 140, 35), domino_material);
-		domino.position.y += 80;
-		domino.position.x += 700;
-		domino.position.z -= 200;
-		domino.castShadow = true;
-		domino.receiveShadow = true;
-		scene.add(domino);
-		objects.push(domino);
 
 		//ball next thank you
 		var ball_texture = new THREE.TextureLoader().load('../textures/ball.png');
@@ -294,32 +340,6 @@
 		inclinedPlane.position.z += 200;
 		scene.add(inclinedPlane);
 		objects.push(inclinedPlane);
-
-		var transformControls = new THREE.TransformControls(camera, renderer.domElement);    
-		transformControls.addEventListener('change', render);
-		transformControls.attach(objects[3]);
-		transformControls.addEventListener('mouseDown', function () {
-			orbitControls.enabled = false;
-		});
-		transformControls.addEventListener('mouseUp', function () {
-			orbitControls.enabled = true;
-		});
-		window.addEventListener('keydown', function(event) {
-			if(event.code == 'KeyR') {
-				transformControls.setMode("rotate");
-			} else if (event.code == 'KeyT') {
-				transformControls.setMode("translate");
-			} else if (event.code == 'KeyS') {
-				transformControls.setMode("scale");
-			} else if (event.code == 'Space') {
-				!(transformControls.enabled);
-			} else return;
-		});
-		scene.add(transformControls);
-
-
-
-
 		// scene.simulate();
 
 
