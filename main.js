@@ -11,6 +11,7 @@ var radius = 100, theta = 0;
 var objects = [];
 var once = false;
 var simulate = false;
+
 init();
 animate();
 
@@ -18,7 +19,7 @@ function init() {
 	width = window.innerWidth;
 	height = window.innerHeight;
 
-	scene = new Physijs.Scene({ reportsize: 50, fixedTimeStep: 1 / 60 });
+	scene = new Physijs.Scene();
 	scene.setGravity(new THREE.Vector3( 0, -100, 0));
 	scene.addEventListener( 'update', function() {
 		//your code. physics calculations have done updating
@@ -132,6 +133,7 @@ function init() {
 	// Selecting objects on mouse click
 	raycaster = new THREE.Raycaster();
 	mouse = new THREE.Vector2();
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -162,24 +164,26 @@ function render() {
 	// calculate objects intersecting the picking ray
 	var intersects = raycaster.intersectObjects( scene.children );
 
-	/* if(intersects.length > 0) {
-	//	transformControls.detach();
+	if(intersects.length > 0) {
 		if(objects.includes(intersects[0].object)) {
 			transformControls.attach(intersects[0].object);
 		}
-	} */
+	}
 
 	orbitControls.update();
 	renderer.clear();
+
 	if (simulate) {
 		scene.simulate();
 	}
+
 	for(var i = 0; i < objects.length; i++){
 		var bbox = new THREE.Box3().setFromObject(objects[i]);
 		if (bbox.min.y < 0) {
 			objects[i].position.y = objects[i].position.y + (0-bbox.min.y);
 		}
 	}
+
 	renderer.render( scene, camera );
 }
 
@@ -203,7 +207,7 @@ function generateDomino() {
 	domino.position.z -= 200;
 	domino.castShadow = true;
 	domino.receiveShadow = true;
-	domino.id = 0;
+	domino.name = domino.uuid;
 	scene.add(domino);
 	objects.push(domino);
 }
@@ -221,6 +225,7 @@ function generateBall() {
 	ball.position.x += 700;
 	ball.castShadow = true;
 	ball.receiveShadow = true;
+	ball.name = ball.uuid;
 	scene.add(ball);
 	objects.push(ball);
 }
@@ -234,6 +239,7 @@ function generateLargeCube() {
 	cube.position.x += 850;
 	cube.castShadow = true;
 	cube.receiveShadow = true;
+	cube.name = cube.uuid;
 	scene.add(cube);
 	objects.push(cube);
 }
@@ -246,6 +252,7 @@ function generateMediumCube() {
 	cubeM.position.x += 850;
 	cubeM.castShadow = true;
 	cubeM.receiveShadow = true;
+	cubeM.name = cubeM.uuid;
 	scene.add(cubeM);
 	objects.push(cubeM);
 }
@@ -259,6 +266,7 @@ function generateSmallCube() {
 	cubeS.position.x += 850;
 	cubeS.castShadow = true;
 	cubeS.receiveShadow = true;
+	cubeS.name = cubeS.uuid;
 	scene.add(cubeS);
 	objects.push(cubeS);
 }
@@ -278,6 +286,7 @@ function generateSeeSaw() {
 	fulcrum.position.z += 200;
 	fulcrum.castShadow = true;
 	fulcrum.receiveShadow = true;
+	fulcrum.name = fulcrum.uuid;
 	scene.add(fulcrum);
 	objects.push(fulcrum);
 
@@ -287,6 +296,7 @@ function generateSeeSaw() {
 	seesaw.position.z += 200;
 	seesaw.castShadow = true;
 	seesaw.receiveShadow = true;
+	seesaw.name = scene.uuid;
 	scene.add(seesaw);
 	objects.push(seesaw);
 
@@ -345,33 +355,53 @@ function generateInclinedPlane() {
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
 	// Convert every object in the scene into a physijs mesh
-	const current = objects.length;
-	for (var i = 0; i < current; i++) {
-		var obj = objects[i];
+	scene.remove(transformControls);
+	transformControls.dispose();
+	var length = scene.children.length - 1;
+	for (var i = length; i >= 0; i--) {
+
+		// Verify that the object we're looking at is a rube mesh
+		var mesh = scene.children[i];
+		mesh = scene.getObjectByName(mesh.name);
+		if(mesh.type != "Mesh" || !objects.includes(mesh)) {
+			continue;
+		}
 
 		// Clone the necessary aspects of the mesh
-		var mat = obj.material.clone();
-		var position = obj.position.clone();
-		var geometry = obj.geometry.clone();
+		var mat = mesh.material.clone();
+		var position = mesh.position.clone();
+		var geometry = mesh.geometry.clone();
+
+		// add physics to mesh
+		var material = new Physijs.createMaterial(mat, .8, .3);
 
 		// Create the new Physijs mesh
-		var physObj = new Physijs.ConcaveMesh(geometry, mat);
-		physObj.position.copy(position);
+		var physMesh = new Physijs.ConcaveMesh(geometry, material, 1);
+		physMesh.position.copy(position);
+		physMesh.name = physMesh.uuid;
+		physMesh.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+			// `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
+		});
 
-		// Remove the old mesh from the scene
-		obj.material.dispose();
-		obj.geometry.dispose();
-
-		scene.remove(obj);
-
-		// Add the mesh to the scene
-		objects.push(physObj);
-		scene.add(physObj);
-
-		// reset transform controls
-		transformControls.detach();
+		// Remove all trace of the old mesh
+		var index = objects.indexOf(mesh);
+		if (index > -1) {
+			objects.splice(index, 1, physMesh);
+		}
+		
+		// Remove the old mesh from the scene and dispose its contents
+		mesh.material.dispose();
+		mesh.geometry.dispose();
+		 
+		scene.remove(mesh);
 	}
-	simulate = !(simulate);
+
+	// Add everything to the scene
+	for (var i = 0; i < objects.length; i++) {
+		scene.add(objects[i]);
+	}
+
+	simulate = true;
 }
 	// Pendulum
 // Swing

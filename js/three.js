@@ -8780,6 +8780,10 @@
 			var children = this.children;
 
 			for ( var i = 0, l = children.length; i < l; i ++ ) {
+				
+				if (children[ i ].parent == null) {
+					console.log(children[i]);
+				}
 
 				children[ i ].updateMatrixWorld( force );
 
