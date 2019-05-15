@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>COS426 Final Project &mdash; Rube Goldberg Machine!</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="css/style.css" type="text/css" rel="stylesheet"/>
     <link rel="stylesheet" href="./style.css">
     <script src="./js/three.js"></script>
     <script src="./js/physi.js"></script>
@@ -11,17 +15,26 @@
     <script src="./js/TransformControls.js"></script>
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="./ammo.js"></script>
-    <script src="../js/Detector.js"></script>
-    <script src="../js/stats.min.js"></script>
+    <script src="./js/Detector.js"></script>
+    <script src="./js/stats.min.js"></script>
+    <script src="libjs/dat.gui.min.js"></script>
     <style >
     	body{margin: 0;}
     	canvas{ width: 100%; height: 100%; }
+        #info {
+            font-size: 24px;
+            position: absolute;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <div id="info">COS426 Final Project &mdash; Rube Goldberg Machine!<br>
     <div id="writeup">
     <p id="student">Pelumi Odimayo &mdash; Reece Schachne &mdash; Zoe Barnswell<p>
+        
     <!-- Trigger/Open The Modal -->
     <button id="myBtn">Instructions</button>
 
@@ -69,5 +82,6 @@
         }
     </script>
     <script src="./main.js"></script>
+    <script src="./gui.js"></script>
 </body>
 </html>
