@@ -1,30 +1,31 @@
 var Domino = function() {
-	this.domino = function() { generateDomino() };
+	this.Domino = function() { generateDomino() };
 }
 
 var Ball = function() {
-	this.ball = function() { generateBall() };
+	this.Ball = function() { generateBall() };
 }
 
 var Cube = function() {
-	this.cube = function() { generateLargeCube() };
+	this.Cube = function() { generateLargeCube() };
 }
 
 var SeeSaw = function() {
-	this.seesaw = function() { generateSeeSaw() };
+	this.Seesaw = function() { generateSeeSaw() };
 }
 
 var InclinedPlane = function() {
-	this.inclined_plane = function() { generateInclinedPlane() };
+	this.Inclined_Plane = function() { generateInclinedPlane() };
 }
 
 var Simulate = function() {
-	this.simulate = function() { Simulation() };
+	this.Start = function() { Simulation() };
 }
 
 var Restart = function() {
-	this.restart = function() {
+	this.Restart = function() {
 		for (let i = 0; i < objects.length; i++){
+			transformControls.detach();
 			objects[i].material.dispose();
 			objects[i].geometry.dispose();
 			scene.remove(objects[i]);
@@ -41,13 +42,13 @@ function dropdown() {
 	var i_p = new InclinedPlane();
 	var simulate = new Simulate();
 	var restart = new Restart();
-	gui.add(domino, 'domino');
-	gui.add(ball, 'ball');
-	gui.add(cube, 'cube');
+	gui.add(domino, 'Domino');
+	gui.add(ball, 'Ball');
+	gui.add(cube, 'Cube');
 	//gui.add(seesaw, 'seesaw');
-	gui.add(i_p, 'inclined_plane');
-	gui.add(simulate, 'simulate');
-	gui.add(restart, 'restart')
+	gui.add(i_p, 'Inclined_Plane');
+	gui.add(simulate, 'Start');
+	gui.add(restart, 'Restart')
 }
 
 window.onload = function() {
