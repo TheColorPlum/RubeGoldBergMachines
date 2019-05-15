@@ -9,6 +9,7 @@ var camera, scene, raycaster, renderer, width, height, orbitControls, transformC
 var mouse = new THREE.Vector2(), INTERSECTED;
 var radius = 100, theta = 0;
 var objects = [];
+var resetObjects = [];
 var once = false;
 var simulate = false;
 
@@ -358,6 +359,15 @@ function generateInclinedPlane() {
 /*	*	*	*	*	*	*	*	*	 SIMULATE 	*	*	*	*	*	*	*	*	*/
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
+
+	// Before simulating, save the setup
+	/* for(var i = 0; i < objects.length; i++) {
+		var obj = {
+			"Position": objects[i].position.clone();
+			"Rotation": objects[i].rotation.clone();
+		}
+		resetObjects.push()
+	} */
 	// Convert every object in the scene into a physijs mesh
 	transformControls.detach();
 	var length = scene.children.length - 1;
@@ -416,6 +426,11 @@ function Simulation() {
 	}
 
 	simulate = true;
+}
+
+// Set all objects back to their original positions before simulate was run
+function reset() {
+
 }
 	// Pendulum
 // Swing
