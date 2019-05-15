@@ -19,6 +19,55 @@
     </style>
 </head>
 <body>
+    <div id="info">COS426 Final Project &mdash; Rube Goldberg Machine!<br>
+    <div id="writeup">
+    <p id="student">Pelumi Odimayo &mdash; Reece Schachne &mdash; Zoe Barnswell<p>
+    <!-- Trigger/Open The Modal -->
+    <button id="myBtn">Instructions</button>
+
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <p>Welcome to the Virtual Rube Goldberg Machine! </p>
+        <ul align="left">
+          <li>Click on the dropdown to add elements to the playground. Newly created objects will appear in the sandbox.</li>
+          <li>Select different objects with your mouse and drag and drop them to place them in the scene.</li>
+          <li>Transformations can be applied using the keyboard and the mouse. To enable rotation, press the 'r' key. Enabling translation can be done by pressing the 't' key. Lastly, pressing the 's' key enables sscaling. After selecting your mode, use the mouse to apply the transformation!</li>
+          <li>To start your Rube Goldberg Machine, enable the physics by pressing the simulate button on the dropdown. Be sure to include an angled domino or a ball over an inclined plane at the start of your machine!</li>
+          <li>To clear the playground, press restart on the dropdown. Then begin building a new Rube Goldberg Machine!</li>
+        </ul>
+    </div>
+    </div>
+    <script>
+        // Get the modal
+        var modal = document.getElementById("myModal");
+
+        // Get the button that opens the modal
+        var btn = document.getElementById("myBtn");
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on the button, open the modal 
+        btn.onclick = function() {
+          modal.style.display = "block";
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function() {
+          modal.style.display = "none";
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+          if (event.target == modal) {
+            modal.style.display = "none";
+          }
+        }
+    </script>
     <script src="./main.js"></script>
 </body>
 </html>
