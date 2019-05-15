@@ -360,14 +360,6 @@ function generateInclinedPlane() {
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
 
-	// Before simulating, save the setup
-	/* for(var i = 0; i < objects.length; i++) {
-		var obj = {
-			"Position": objects[i].position.clone();
-			"Rotation": objects[i].rotation.clone();
-		}
-		resetObjects.push()
-	} */
 	// Convert every object in the scene into a physijs mesh
 	transformControls.detach();
 	var length = scene.children.length - 1;
@@ -410,12 +402,14 @@ function Simulation() {
 		// Remove all trace of the old mesh
 		var index = objects.indexOf(mesh);
 		if (index > -1) {
-			objects.splice(index, 1, physMesh);
+			if(resetObjects.length != objects.length) {
+				resetObjects.push(objects.splice(index, 1, physMesh)[0]);
+			}
 		}
 		
 		// Remove the old mesh from the scene and dispose its contents
-		mesh.material.dispose();
-		mesh.geometry.dispose();
+		/* mesh.material.dispose();
+		mesh.geometry.dispose(); */
 		 
 		scene.remove(mesh);
 	}
@@ -429,7 +423,21 @@ function Simulation() {
 }
 
 // Set all objects back to their original positions before simulate was run
-function reset() {
+function ResetScene() {
+
+	simulate = false;
+
+	transformControls.detach();
+	for (var i = 0; i < objects.length; i++) {
+		scene.remove(objects[i]);
+
+		objects[i].material.dispose()
+		objects[i].geometry.dispose();
+
+		objects[i] = resetObjects[i];
+		resetObjects.pop();
+		scene.add(objects[i]);
+	}
 
 }
 	// Pendulum

@@ -22,6 +22,10 @@ var Simulate = function() {
 	this.Start = function() { Simulation() };
 }
 
+var Reset = function() {
+	this.Reset = function() { ResetScene() };
+}
+
 var Restart = function() {
 	this.Restart = function() {
 		for (let i = 0; i < objects.length; i++){
@@ -29,6 +33,8 @@ var Restart = function() {
 			objects[i].material.dispose();
 			objects[i].geometry.dispose();
 			scene.remove(objects[i]);
+			objects.pop();
+			resetObjects.pop();
 		}
 	}
 }
@@ -41,13 +47,15 @@ function dropdown() {
 	var seesaw = new SeeSaw();
 	var i_p = new InclinedPlane();
 	var simulate = new Simulate();
+	var reset = new Reset();
 	var restart = new Restart();
 	gui.add(domino, 'Domino');
 	gui.add(ball, 'Ball');
 	gui.add(cube, 'Cube');
-	//gui.add(seesaw, 'seesaw');
+	// gui.add(seesaw, 'seesaw');
 	gui.add(i_p, 'Inclined_Plane');
 	gui.add(simulate, 'Start');
+	gui.add(reset, 'Reset');
 	gui.add(restart, 'Restart')
 }
 
