@@ -47,16 +47,17 @@ function dropdown() {
 	var seesaw = new SeeSaw();
 	var i_p = new InclinedPlane();
 	var simulate = new Simulate();
-	var reset = new Reset();
-	var restart = new Restart();
+	var reset = new Restart();
+	var restart = new Reset();
 	gui.add(domino, 'Domino');
 	gui.add(ball, 'Ball');
 	gui.add(cube, 'Cube');
 	// gui.add(seesaw, 'seesaw');
 	gui.add(i_p, 'Inclined_Plane');
 	gui.add(simulate, 'Start');
-	gui.add(reset, 'Reset');
-	gui.add(restart, 'Restart')
+	gui.add(restart, 'Reset');
+	gui.add(reset, 'Restart');
+	
 }
 
 window.onload = function() {
