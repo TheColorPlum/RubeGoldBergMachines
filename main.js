@@ -29,7 +29,7 @@ function init() {
 	var grass = new THREE.TextureLoader().load('../textures/grass.png');
 	grass.mapping = THREE.EquirectangularReflectionMapping;
 	var ground_material = Physijs.createMaterial(
-		new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ),0, .9 // low restitution
+		new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ), .8, .9 // low restitution
 	);
 	var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 1, 4000), ground_material, 0 // mass
 	);
@@ -93,7 +93,11 @@ function init() {
 	var light = new THREE.DirectionalLight( 0x002288 );
 	light.position.set( - 1, - 1, - 1 );
 	scene.add( light );
+	var light = new THREE.DirectionalLight( 0xffffff );
+	light.position.set( - 1, -1, 0 );
+	scene.add( light );
 	var light = new THREE.AmbientLight( 0x222222 );
+	//light.position.set(0, 0, 0);
 	scene.add( light );
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -323,11 +327,11 @@ function generateInclinedPlane() {
 	var material = new THREE.MeshPhongMaterial({ color: 0xb76e79, flatShading: true });
 	var geometry = new THREE.Geometry();
 	geometry.vertices.push(new THREE.Vector3(0, 0, 0));
-	geometry.vertices.push(new THREE.Vector3(-50, 0, 0));
-	geometry.vertices.push(new THREE.Vector3(-50, 0, -50));
-	geometry.vertices.push(new THREE.Vector3(-50, 50, -50));
-	geometry.vertices.push(new THREE.Vector3(0, 50, -50));
-	geometry.vertices.push(new THREE.Vector3(0, 0, -50));
+	geometry.vertices.push(new THREE.Vector3(-100, 0, 0));
+	geometry.vertices.push(new THREE.Vector3(-100, 0, -100));
+	geometry.vertices.push(new THREE.Vector3(-100, 100, -100));
+	geometry.vertices.push(new THREE.Vector3(0, 100, -100));
+	geometry.vertices.push(new THREE.Vector3(0, 0, -100));
 
 	var face0 = new THREE.Face3(4, 1, 0);
 	var face0r = new THREE.Face3(4, 3, 1);
@@ -355,8 +359,7 @@ function generateInclinedPlane() {
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
 	// Convert every object in the scene into a physijs mesh
-	scene.remove(transformControls);
-	transformControls.dispose();
+	transformControls.detach();
 	var length = scene.children.length - 1;
 	for (var i = length; i >= 0; i--) {
 
@@ -370,14 +373,25 @@ function Simulation() {
 		// Clone the necessary aspects of the mesh
 		var mat = mesh.material.clone();
 		var position = mesh.position.clone();
-		var geometry = mesh.geometry.clone();
+		var rotation = mesh.rotation.clone();
+		var geometry = mesh.geometry;
 
 		// add physics to mesh
 		var material = new Physijs.createMaterial(mat, .8, .3);
 
 		// Create the new Physijs mesh
-		var physMesh = new Physijs.ConcaveMesh(geometry, material, 1);
-		physMesh.position.copy(position);
+		var physMesh;
+		if (geometry.type === "SphereGeometry") {
+			physMesh = new Physijs.SphereMesh(geometry, material, 1);
+			
+		} else {
+			physMesh = new Physijs.BoxMesh(geometry, material, 1);
+		}
+		
+		physMesh.position.set(position.x, position.y, position.z);
+		physMesh.rotation.set(rotation.x, rotation.y, rotation.z);
+		physMesh.__dirtyPosition = true;
+		physMesh.__dirtyRotation = true;
 		physMesh.name = physMesh.uuid;
 		physMesh.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 			// `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`

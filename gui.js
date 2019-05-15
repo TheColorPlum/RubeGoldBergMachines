@@ -25,6 +25,7 @@ var Simulate = function() {
 var Restart = function() {
 	this.Restart = function() {
 		for (let i = 0; i < objects.length; i++){
+			transformControls.detach();
 			objects[i].material.dispose();
 			objects[i].geometry.dispose();
 			scene.remove(objects[i]);
