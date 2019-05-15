@@ -376,7 +376,7 @@ function Simulation() {
 		var material = new Physijs.createMaterial(mat, .8, .3);
 
 		// Create the new Physijs mesh
-		var physMesh = new Physijs.ConcaveMesh(geometry, material, 1);
+		var physMesh = new Physijs.BoxMesh(geometry, material, 1);
 		physMesh.position.copy(position);
 		physMesh.name = physMesh.uuid;
 		physMesh.addEventListener( 'collision', function( other_object, relative_velocity, relative_rotation, contact_normal ) {
