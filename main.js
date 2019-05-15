@@ -81,7 +81,7 @@ function init() {
 	machineSpace.position.x += 850;
 	scene.add(machineSpace);
 
-	camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
+	camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100000);
 	camera.position.y = 500;
 	camera.position.z = 1000;
 	scene.add(camera);
