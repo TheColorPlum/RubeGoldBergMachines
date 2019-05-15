@@ -29,7 +29,7 @@ function init() {
 	var grass = new THREE.TextureLoader().load('../textures/grass.png');
 	grass.mapping = THREE.EquirectangularReflectionMapping;
 	var ground_material = Physijs.createMaterial(
-		new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ),0, .9 // low restitution
+		new THREE.MeshPhongMaterial( {flatShading: true, map: grass } ), 0.8, .9 // low restitution
 	);
 	var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 1, 4000), ground_material, 0 // mass
 	);
@@ -80,25 +80,26 @@ function init() {
 	machineSpace.position.x += 850;
 	scene.add(machineSpace);
 
+	// CAMERA
 	camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
-	camera.position.y = 500;
-	camera.position.z = 1000;
+	camera.position.set(0, 2000, 3250);
 	scene.add(camera);
 
-	camera.lookAt(ground.position);
-
-	var light = new THREE.DirectionalLight( 0xffffff );
-	light.position.set( 1, 1, 1 );
-	scene.add( light );
-	var light = new THREE.DirectionalLight( 0x002288 );
-	light.position.set( - 1, - 1, - 1 );
-	scene.add( light );
-	var light = new THREE.DirectionalLight( 0xffffff );
-	light.position.set( - 1, -1, 0 );
-	scene.add( light );
-	var light = new THREE.AmbientLight( 0xffffff ); //0x222222
-	//light.position.set(0, 0, 0);
-	scene.add( light );
+	// LIGHTS
+	var light1 = new THREE.DirectionalLight( 0xffffff );
+	light1.position.set( 1, 1, 1 );
+	scene.add( light1 );
+	var light2 = new THREE.DirectionalLight( 0x002288 );
+	light2.position.set( - 1, - 1, - 1 );
+	scene.add( light2 );
+	var light3 = new THREE.DirectionalLight( 0xffffff );
+	light3.position.set( - 1, -1, 0 );
+	scene.add( light3 );
+	var light4 = new THREE.AmbientLight( 0xffffff ); //0x222222
+	scene.add( light4 );
+	var light5 = new THREE.AmbientLight( 0x002288 );
+	light5.position.set(0, 0, -100);
+	scene.add( light5 );
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setSize(width, height);
@@ -106,7 +107,7 @@ function init() {
 	renderer.gammaOutput = true;
 	document.body.appendChild(renderer.domElement);
 
-	var clock = new THREE.Clock;
+	//var clock = new THREE.Clock;
 
 	// Orbit controls
 	orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
