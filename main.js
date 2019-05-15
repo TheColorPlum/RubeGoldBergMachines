@@ -96,7 +96,7 @@ function init() {
 	var light = new THREE.DirectionalLight( 0xffffff );
 	light.position.set( - 1, -1, 0 );
 	scene.add( light );
-	var light = new THREE.AmbientLight( 0x222222 );
+	var light = new THREE.AmbientLight( 0xffffff ); //0x222222
 	//light.position.set(0, 0, 0);
 	scene.add( light );
 
