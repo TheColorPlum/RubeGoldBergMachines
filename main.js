@@ -29,7 +29,7 @@ function init() {
 	var grass = new THREE.TextureLoader().load('../textures/grass.png');
 	grass.mapping = THREE.EquirectangularReflectionMapping;
 	var ground_material = Physijs.createMaterial(
-		new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ),0, .9 // low restitution
+		new THREE.MeshPhongMaterial( { color: 0x008080, flatShading: true, map: grass } ), .8, .9 // low restitution
 	);
 	var ground = new Physijs.BoxMesh(new THREE.BoxGeometry(4000, 1, 4000), ground_material, 0 // mass
 	);
@@ -359,8 +359,7 @@ function generateInclinedPlane() {
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
 	// Convert every object in the scene into a physijs mesh
-	scene.remove(transformControls);
-	transformControls.dispose();
+	transformControls.detach();
 	var length = scene.children.length - 1;
 	for (var i = length; i >= 0; i--) {
 
