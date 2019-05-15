@@ -9,6 +9,7 @@ var camera, scene, raycaster, renderer, width, height, orbitControls, transformC
 var mouse = new THREE.Vector2(), INTERSECTED;
 var radius = 100, theta = 0;
 var objects = [];
+var resetObjects = [];
 var once = false;
 var simulate = false;
 
@@ -81,7 +82,7 @@ function init() {
 	scene.add(machineSpace);
 
 	// CAMERA
-	camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
+	camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100000);
 	camera.position.set(0, 2000, 3250);
 	scene.add(camera);
 
@@ -97,9 +98,6 @@ function init() {
 	scene.add( light3 );
 	var light4 = new THREE.AmbientLight( 0xffffff ); //0x222222
 	scene.add( light4 );
-	var light5 = new THREE.AmbientLight( 0x002288 );
-	light5.position.set(0, 0, -100);
-	scene.add( light5 );
 
 	renderer = new THREE.WebGLRenderer({ antialias: true });
 	renderer.setSize(width, height);
@@ -359,6 +357,15 @@ function generateInclinedPlane() {
 /*	*	*	*	*	*	*	*	*	 SIMULATE 	*	*	*	*	*	*	*	*	*/
 //////////////////////////////////////////////////////////////////////////////////
 function Simulation() {
+
+	// Before simulating, save the setup
+	/* for(var i = 0; i < objects.length; i++) {
+		var obj = {
+			"Position": objects[i].position.clone();
+			"Rotation": objects[i].rotation.clone();
+		}
+		resetObjects.push()
+	} */
 	// Convert every object in the scene into a physijs mesh
 	transformControls.detach();
 	var length = scene.children.length - 1;
@@ -417,6 +424,11 @@ function Simulation() {
 	}
 
 	simulate = true;
+}
+
+// Set all objects back to their original positions before simulate was run
+function reset() {
+
 }
 	// Pendulum
 // Swing
