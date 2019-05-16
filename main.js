@@ -223,7 +223,7 @@ function generateBall() {
 		new THREE.MeshPhongMaterial( { flatShading: true, map: ball_texture } ),0, .9 // low restitution
 	);
 
-	var ball = new Physijs.SphereMesh(new THREE.SphereGeometry(30, 30, 30 ), ball_material);
+	var ball = new THREE.Mesh(new THREE.SphereGeometry(100, 100, 100 ), ball_material);
 	ball.position.y += 40;
 	ball.position.x += 700;
 	ball.castShadow = true;
@@ -236,7 +236,7 @@ function generateBall() {
 function generateLargeCube() {
 	// Large Cube
 	var large = new THREE.MeshPhongMaterial({ color: 0xd368f9, flatShading: true });
-	var cube = new Physijs.BoxMesh(new THREE.BoxGeometry(120, 120, 120), large, 0);
+	var cube = new THREE.Mesh(new THREE.BoxGeometry(120, 120, 120), large, 0);
 	cube.position.z -= 200;
 	cube.position.y += 70;
 	cube.position.x += 850;
@@ -250,7 +250,7 @@ function generateLargeCube() {
 function generateMediumCube() {
 	// Medium Cube
 	var medium = new THREE.MeshPhongMaterial({ color: 0xf9e368, flatShading: true });
-	var cubeM = new Physijs.BoxMesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
+	var cubeM = new THREE.Mesh(new THREE.BoxGeometry(60, 60, 60), medium, 0);
 	cubeM.position.y += 40;
 	cubeM.position.x += 850;
 	cubeM.castShadow = true;
@@ -263,7 +263,7 @@ function generateMediumCube() {
 function generateSmallCube() {
 	// Small Cube
 	var small = new THREE.MeshPhongMaterial({ color: 0x3676f7, flatShading: true });
-	var cubeS = new Physijs.BoxMesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
+	var cubeS = new THREE.Mesh(new THREE.BoxGeometry(30, 30, 30), small, 0);
 	cubeS.position.z += 100;
 	cubeS.position.y += 25;
 	cubeS.position.x += 850;
@@ -345,7 +345,7 @@ function generateInclinedPlane() {
 	geometry.computeFaceNormals();
 	geometry.computeVertexNormals();
 
-	var inclinedPlane = new Physijs.ConcaveMesh(geometry, material);
+	var inclinedPlane = new THREE.Mesh(geometry, material);
 	inclinedPlane.position.x += 875;
 	inclinedPlane.position.y += 10;
 	inclinedPlane.position.z += 200;
@@ -360,7 +360,9 @@ function Simulation() {
 
 	// Convert every object in the scene into a physijs mesh
 	transformControls.detach();
+
 	var length = scene.children.length - 1;
+
 	for (var i = length; i >= 0; i--) {
 
 		// Verify that the object we're looking at is a rube mesh
@@ -377,7 +379,7 @@ function Simulation() {
 		var geometry = mesh.geometry;
 
 		// add physics to mesh
-		var material = new Physijs.createMaterial(mat, .8, .3);
+		var material = new Physijs.createMaterial(mat, .8, .7);
 
 		// Create the new Physijs mesh
 		var physMesh;
@@ -400,9 +402,8 @@ function Simulation() {
 		// Remove all trace of the old mesh
 		var index = objects.indexOf(mesh);
 		if (index > -1) {
-			if(resetObjects.length != objects.length) {
-				resetObjects.push(objects.splice(index, 1, physMesh)[0]);
-			}
+			resetObjects.push(objects[index]);
+			objects.splice(index, 1, physMesh)[0];
 		}
 		
 		// Remove the old mesh from the scene and dispose its contents
@@ -421,19 +422,20 @@ function Simulation() {
 }
 
 // Set all objects back to their original positions before simulate was run
-function ResetScene() {
+function RestartScene() {
 
 	simulate = false;
 
 	transformControls.detach();
-	for (var i = 0; i < objects.length; i++) {
+
+	for (var i = objects.length - 1; i >= 0; i--) {
 		scene.remove(objects[i]);
 
 		objects[i].material.dispose()
 		objects[i].geometry.dispose();
 
 		objects[i] = resetObjects[i];
-		resetObjects.pop();
+
 		scene.add(objects[i]);
 	}
 
