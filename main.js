@@ -405,10 +405,6 @@ function Simulation() {
 			resetObjects.push(objects[index]);
 			objects.splice(index, 1, physMesh)[0];
 		}
-		
-		// Remove the old mesh from the scene and dispose its contents
-		/* mesh.material.dispose();
-		mesh.geometry.dispose(); */
 		 
 		scene.remove(mesh);
 	}
